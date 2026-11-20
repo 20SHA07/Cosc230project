@@ -4,12 +4,7 @@ public class Student extends User {
     private int initialMinutes;
 
     public Student(AccessRequest request) {
-        super(
-            request.getId(),
-            request.getName(),
-            request.getPassword()
-        );
-
+        super(request.getId(),request.getName(),request.getPassword());
         email = request.getEmail();
         phone = request.getPhone();
         initialMinutes = request.getMinutes();
