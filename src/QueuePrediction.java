@@ -1,6 +1,6 @@
 import java.time.LocalDateTime;
 
-// Holds the predicted schedule for one waiting job (shown in the monitor).
+// Predicted start and finish for one waiting job.
 public class QueuePrediction {
 
     private Job job;

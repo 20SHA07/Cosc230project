@@ -1,8 +1,7 @@
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 
-// The shared simulated clock. Set the start time once, then only Advance Minute
-// moves it forward. Times are shown as dd/MM/yyyy HH:mm.
+// The simulation clock. Set once, then it only moves forward one minute at a time.
 public class SimulationClock {
 
     public static final DateTimeFormatter FMT =

@@ -6,8 +6,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import javax.swing.*;
 
-// Monitoring screen for the scheduler. Only displays what the scheduler reports
-// and moves the clock - no scheduling logic lives here.
+// Screen that shows the GPUs and the queue. The logic is all in Scheduler.
 public class SchedulerMonitorPanel extends JPanel implements ActionListener {
 
     private Scheduler scheduler;
