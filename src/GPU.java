@@ -1,7 +1,6 @@
 import java.time.LocalDateTime;
 
-// One of the four GPUs. Runs at most one job and counts how long it has run.
-// The job's own fields are set by the Scheduler; this class just tracks occupancy.
+// One GPU. It holds one job at a time and counts the minutes it has run.
 public class GPU {
 
     private int id;              // 1..4
@@ -50,15 +49,7 @@ public class GPU {
         return startedAt.plusMinutes(currentJob.getEstimatedDuration());
     }
 
-    // Take the job off the GPU. The Scheduler updates the job's status.
-    public Job complete() {
-        Job done = currentJob;
-        currentJob = null;
-        minutesRun = 0;
-        startedAt = null;
-        return done;
-    }
-
+    // Take the job off the GPU (the Scheduler updates the job's status).
     public Job release() {
         Job j = currentJob;
         currentJob = null;

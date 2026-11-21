@@ -1,5 +1,4 @@
-// Lets the allowance part (Person 2) react when a job finishes or is cancelled,
-// so the scheduler doesn't have to know about charging time. Can be left unset.
+// Called by the scheduler when a job finishes or is cancelled (used for allowances).
 public interface SchedulerListener {
 
     void onJobCompleted(Job job, int runtimeMinutes);

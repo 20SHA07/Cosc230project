@@ -1,9 +1,7 @@
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-// Runs the simulation: four GPUs, one FCFS queue and the shared clock.
-// Jobs are the ones from Person 2 (Job); this class starts, completes and
-// cancels them through their own startJob/completeJob/cancelJob methods.
+// Runs the simulation: 4 GPUs, one first-come-first-served queue and the clock.
 public class Scheduler {
 
     public static final int GPU_COUNT = 4;
@@ -71,7 +69,7 @@ public class Scheduler {
                 gpu.tick();
                 if (gpu.isFinished()) {
                     int runtime = gpu.getCurrentJob().getEstimatedDuration();
-                    Job done = gpu.complete();
+                    Job done = gpu.release();
                     done.completeJob(clock.formattedNow());
                     if (listener != null) {
                         listener.onJobCompleted(done, runtime);
@@ -151,8 +149,8 @@ public class Scheduler {
         return null;
     }
 
-    // Work out when each waiting job would start/finish, without touching the
-    // real GPUs. freeIn = minutes until each GPU is free (a copy we can change).
+    // Guess when each waiting job will start and finish.
+    // freeIn is a copy of the GPUs' free times so the real GPUs are not changed.
     public ArrayList<QueuePrediction> predictQueue() {
         ArrayList<QueuePrediction> result = new ArrayList<QueuePrediction>();
         if (!clock.isInitialised()) return result;
@@ -164,12 +162,9 @@ public class Scheduler {
             freeIn[i] = gpus[i].isFree() ? 0 : gpus[i].remainingRuntime();
         }
 
-        ArrayList<Job> ordered = new ArrayList<Job>(queue);
-        sortById(ordered);
-
         int position = 1;
-        for (int k = 0; k < ordered.size(); k++) {
-            Job job = ordered.get(k);
+        for (int k = 0; k < queue.size(); k++) {
+            Job job = queue.get(k);
 
             // pick the GPU that frees up soonest (ties -> lowest id)
             int pick = 0;
@@ -191,22 +186,6 @@ public class Scheduler {
             position++;
         }
         return result;
-    }
-
-    private void sortById(ArrayList<Job> list) {
-        for (int i = 0; i < list.size() - 1; i++) {
-            int best = i;
-            for (int j = i + 1; j < list.size(); j++) {
-                if (list.get(j).getJobId() < list.get(best).getJobId()) {
-                    best = j;
-                }
-            }
-            if (best != i) {
-                Job tmp = list.get(i);
-                list.set(i, list.get(best));
-                list.set(best, tmp);
-            }
-        }
     }
 
     public int getTotalBusyGpuMinutes() { return totalBusyGpuMinutes; }

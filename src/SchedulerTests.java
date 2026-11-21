@@ -1,7 +1,7 @@
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 
-// Simple tests for the scheduler - no JUnit needed. Each check() prints pass/fail.
+// Tests for the scheduler. Each check() prints PASS or FAIL.
 // Run: javac src/*.java -d out  &&  java -cp out SchedulerTests
 public class SchedulerTests {
 

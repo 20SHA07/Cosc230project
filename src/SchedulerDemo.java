@@ -4,8 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import javax.swing.*;
 
-// Standalone window to try the scheduler on its own (not part of the final app).
-// The listener here just prints to the console in place of Person 2's allowance.
+// Small window to try the scheduler on its own.
 public class SchedulerDemo {
 
     private static int nextJobId = 101;
