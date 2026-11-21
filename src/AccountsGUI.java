@@ -4,7 +4,9 @@ import java.io.IOException;
 import javax.swing.*;
 
 public class AccountsGUI extends JFrame implements ActionListener {
-    private AccountManager manager;
+	private AccountManager manager;
+	private JobManager jobManager;
+	private StudentDashboardPanel studentDashboard;
 
     // Login fields.
     private JTextField username = new JTextField();
@@ -28,8 +30,9 @@ public class AccountsGUI extends JFrame implements ActionListener {
     private JPanel adminPanel = new JPanel(new BorderLayout());
 
     // Creates the window and its panels.
-    public AccountsGUI(AccountManager manager) {
+    public AccountsGUI(AccountManager manager, JobManager jobManager) {
         this.manager = manager;
+        this.jobManager = jobManager;
 
         setTitle("GPU Accounts and Registration");
         setSize(950, 450);
@@ -119,16 +122,16 @@ public class AccountsGUI extends JFrame implements ActionListener {
         } else {
             Student student = (Student) user;
 
-            // Person 2: Replace this panel with your student dashboard and job controls.
-            // Use the student's ID for jobs and balances; do not reset balances on login.
-            JPanel panel = new JPanel(new GridLayout(3, 1));
+            if (jobManager.findAllowance(student.getUsername()) == null) {
+                jobManager.addStudentAllowance(student.getTimeAllowance());
+            }
 
-            panel.add(new JLabel(user.getRole() + ": " + user.getName()));
+            studentDashboard = new StudentDashboardPanel(student.getUsername(), jobManager);
 
-            String text = "Initial grant: " + student.getInitialMinutes() + " minutes. Job dashboard will be added by Person 2.";
+            JPanel panel = new JPanel(new BorderLayout());
 
-            panel.add(new JLabel(text));
-            panel.add(button("Logout"));
+            panel.add(studentDashboard, BorderLayout.CENTER);
+            panel.add(button("Logout"), BorderLayout.SOUTH);
 
             showPanel(panel);
         }
@@ -225,8 +228,9 @@ public class AccountsGUI extends JFrame implements ActionListener {
         @Override
         public void run() {
             try {
-                AccountManager manager = new AccountManager("accounts.txt");
-                AccountsGUI window = new AccountsGUI(manager);
+            	AccountManager manager = new AccountManager("accounts.txt");
+            	JobManager jobManager = new JobManager();
+            	AccountsGUI window = new AccountsGUI(manager, jobManager);
                 window.setVisible(true);
 
             } catch (Exception e) {
